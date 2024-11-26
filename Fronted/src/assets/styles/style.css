@@ -1,0 +1,132 @@
+/* Estilo general para el cuerpo */
+body {
+  font-family: 'Poppins', sans-serif;
+}
+
+/* Estilo para la barra de navegación */
+.navbar {
+  background-color: #C0392B;
+}
+
+.custom-navbar {
+  padding: 0 30px; /* Ajuste del padding para mayor separación */
+  background-color: #C0392B; /* Color de fondo para dar un toque elegante */
+}
+
+/* Estilo para el logo en la barra de navegación */
+.navbar-logo {
+  margin-left: 20px; /* Separación del logo desde la izquierda */
+}
+.button
+.navbar-logo img {
+  transition: transform 0.3s ease; /* Efecto suave al pasar el mouse por encima del logo */
+}
+
+.navbar-logo img:hover {
+  transform: scale(1.1); /* Efecto de agrandamiento al pasar el mouse */
+}
+
+/* Estilo para los enlaces de navegación */
+.navbar-links {
+  margin-right: 30px; /* Espacio adicional para separar las opciones de la derecha */
+}
+
+.navbar-links .nav-text {
+  font-size: 18px; /* Aumentamos el tamaño del texto */
+  color: #ddd; /* Cambiamos el color del texto para resaltar más */
+  font-weight: bold; /* Hacemos el texto más grueso */
+  transition: color 0.3s ease; /* Añadimos una transición suave al color */
+}
+
+.navbar-links .nav-text:hover {
+  color: #fff; /* Cambiamos el color al pasar el mouse por encima */
+}
+
+/* Ajuste del carrusel */
+.carousel-container {
+  max-height: 500px; /* Ajuste para limitar la altura total del carrusel */
+  overflow: hidden; /* Evita que las imágenes se salgan del contenedor */
+}
+
+.carousel-image {
+  width: 100%;
+  height: 500px; /* Mantiene una altura consistente */
+  object-fit: cover; /* Ajusta la imagen al contenedor manteniendo su proporción */
+}
+
+.carousel-item img {
+  height: 70vh; /* Ajusta la altura del carrusel */
+  object-fit: cover;
+}
+
+/* Estilo para las tarjetas */
+.card {
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05); /* Efecto de zoom en las tarjetas */
+}
+
+/* Estilo para las imágenes dentro de las tarjetas */
+.card-image {
+  height: 300px; /* Altura fija para todas las imágenes de las tarjetas */
+  width: 100%; /* Asegura que la imagen ocupe todo el ancho del contenedor */
+  object-fit: cover; /* Ajusta la imagen al contenedor manteniendo su proporción */
+}
+
+/* Estilo para el pie de página */
+footer {
+  background-color: #C0392B;
+  color: white;
+}
+
+/* Estilo para la sección de Ubícanos */
+.ubicacion-section {
+  margin: 40px auto;
+  text-align: center;
+  padding: 20px;
+  border: 1px solid #ddd; /* Borde suave */
+  border-radius: 10px;
+  background-color: #f5f5f5; /* Fondo claro para destacar la sección */
+}
+
+.ubicacion-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #C0392B; /* Color de título acorde al tema */
+}
+
+.ubicacion-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.ubicacion-image {
+  width: 80%;
+  max-width: 400px;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.ubicacion-info {
+  margin-top: 15px;
+  color: #555; /* Color de texto ligeramente oscuro */
+}
+
+.ubicacion-link {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: #C0392B;
+  color: #fff;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.ubicacion-link:hover {
+  background-color: #A93226;
+}

@@ -1,0 +1,564 @@
+/* Estilo general para el cuerpo */
+body {
+  font-family: 'Great Vibes', cursive;
+}
+h1, h2, h3, .menu-navbar a, button {
+  font-family: 'Times New Roman', cursive;
+}
+.step-indicator {
+  font-size: 16px;
+  margin-bottom: 20px;
+  font-weight: bold;
+  color: #666;
+}
+
+.step-indicator span {
+  color: #007bff;
+}
+
+h4, h5 {
+  font-weight: bold;
+}
+
+button {
+  margin-top: 15px;
+}
+
+.card {
+  margin-bottom: 20px;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.container {
+  max-width: 1200px;
+}
+
+.form-control {
+  border-radius: 0.5rem;
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+/* Estilo para la barra de navegación */
+.navbar {
+  background-color: #C0392B;
+}
+
+.custom-navbar {
+  padding: 0 30px; /* Ajuste del padding para mayor separación */
+  background-color: #C0392B; /* Color de fondo para dar un toque elegante */
+}
+
+/* Estilo para el logo en la barra de navegación */
+.navbar-logo {
+  margin-left: 20px; /* Separación del logo desde la izquierda */
+}
+
+.navbar-logo img {
+  transition: transform 0.3s ease; /* Efecto suave al pasar el mouse por encima del logo */
+}
+
+.navbar-logo img:hover {
+  transform: scale(1.1); /* Efecto de agrandamiento al pasar el mouse */
+  background-color: #ffffff; /* Color de fondo para dar un toque elegante */
+}
+
+
+.navbar-links .nav-text {
+  font-size: 15px; /* Aumentamos el tamaño del texto */
+  border: 1px solid #d1963e; /* Borde sutil */
+  border-radius: 10px;
+  margin-right: 8px;
+  
+  color: #ffffff; /* Cambiamos el color del texto para resaltar más */
+  font-weight: bold; /* Hacemos el texto más grueso */
+  transition: color 0.3s ease; /* Añadimos una transición suave al color */
+}
+
+.navbar-links .nav-text:hover {
+  color: #fff; /* Cambiamos el color al pasar el mouse por encima */
+  background-color: #999999; /* Color de fondo para dar un toque elegante */
+}
+
+/* Ajuste del carrusel */
+.carousel-container {
+  max-height: 500px; /* Ajuste para limitar la altura total del carrusel */
+  overflow: hidden; /* Evita que las imágenes se salgan del contenedor */
+}
+
+.carousel-image {
+  width: 100%;
+  height: 500px; /* Mantiene una altura consistente */
+  object-fit: cover; /* Ajusta la imagen al contenedor manteniendo su proporción */
+}
+
+.carousel-item img {
+  height: 70vh; /* Ajusta la altura del carrusel */
+  object-fit: cover;
+}
+
+/* Estilo para las tarjetas */
+.card {
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.05); /* Efecto de zoom en las tarjetas */
+}
+
+/* Estilo para las imágenes dentro de las tarjetas */
+.card-image {
+  height: 300px; /* Altura fija para todas las imágenes de las tarjetas */
+  width: 100%; /* Asegura que la imagen ocupe todo el ancho del contenedor */
+  object-fit: cover; /* Ajusta la imagen al contenedor manteniendo su proporción */
+}
+
+/* Estilo para el pie de página */
+footer {
+  background-color: #C0392B;
+  color: white;
+}
+/* Estilo para el contenedor del formulario */
+input {
+  background-color: #f2f2f2; /* Color de fondo ligero */
+  padding: 40px; /* Espacio interior para separar el contenido de los bordes */
+  border-radius: 8px; /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(218, 10, 10, 0.1); /* Sombra suave para dar profundidad */
+  width: 300px; /* Ancho fijo para mantener la forma */
+  margin: 20px auto; /* Centrado y margen desde el top */
+}
+
+/* Estilo para las etiquetas */
+label {
+  display: block; /* Asegura que la etiqueta tenga su propia línea */
+  margin-bottom: 5px; /* Espacio antes del input */
+  font-weight: bold; /* Texto en negrita para mayor legibilidad */
+}
+
+/* Estilo para los campos de entrada */
+input {
+  width: 100%; /* Ocupa todo el ancho disponible del contenedor padre */
+  padding: 8px; /* Espacio interno para texto */
+  border: 1px solid #ccc; /* Borde sutil */
+  border-radius: 4px; /* Bordes redondeados */
+  box-sizing: border-box; /* El padding y el border no afectan el ancho total */
+  border-color: #C0392B; /* Cambia el color del borde al estar enfocado */
+  box-shadow: 0 0 8px rgba(206, 21, 0, 0.788); /* Sombra que indica foco */
+}
+
+.confirm-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(255, 255, 255, 0.897);
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.confirm-modal button {
+  margin: 5px;
+  padding: 10px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* Estilo para el botón de enviar */
+button {
+  background-color: #be2a1a; /* Color del tema para el fondo */
+  color: rgb(236, 204, 204); /* Texto blanco para contraste */
+  border: none; /* Sin borde */
+  padding: 10px 20px; /* Espacio interno */
+  border-radius: 4px; /* Bordes redondeados */
+  cursor: pointer; /* Indicar que es clickeable */
+  transition: background-color 0.3s; /* Transición suave al cambiar de color */
+}
+.menu-navbar {
+  position: sticky;
+  top: 0;
+  background-color: #941e00;
+  border-bottom: 1px solid #000000;
+  padding: 15px 0;
+  display: flex;
+  justify-content: center;
+  z-index: 1000;
+  position: sticky;
+  border-radius: 15px;
+  
+}
+.menu-navbar a {
+  margin: 0 15px;
+  color: rgb(235, 200, 47);
+  text-decoration: none;
+  font-weight: bold;
+  border: 2px solid #fc7a00;
+  border-radius: 15px;
+  padding: 10px;
+  font-size: 25px; /* Aumentamos el tamaño del texto */
+
+}
+.menu-navbar a:hover {
+  color: #a5a5a5;
+  border-bottom: 5px solid #ffc355;
+  border-radius: 60px;
+  background-color: #962626; /* Color de fondo para dar un toque elegante */
+}
+.submit-button:hover {
+  background-color: #A93226; /* Color ligeramente más oscuro al pasar el mouse */
+}
+/* Estilo para las tarjetas del menú */
+.menu-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgb(243, 239, 239);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  margin: 20px;
+  padding: 20px;
+  width: 360px;
+  flex: 0 1 300px; /* Cada tarjeta puede crecer hasta 300px de ancho */
+  margin: 50px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra el contenido horizontalmente */
+}
+.menu-card h3, .menu-card p {
+  padding: 10px; /* Agrega espacio alrededor del texto */
+}
+.menu-container {
+  justify-content: center;
+  min-height: 100vh; /* Asegura que el contenedor tenga al menos el alto de la pantalla */
+  background-image: url('../images/fondoimagen.jpg'); /* Asegúrate de que la ruta está correcta */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 100%; /* Asegura que el fondo cubra toda la anchura */
+  padding: 20px; /* Ajusta según sea necesario */
+  margin: 20px auto; /* Centra el contenedor en la página con espacio arriba y abajo */
+  padding: 20px;
+  box-sizing: border-box;
+  transition: margin-right 0.3s ease; /* Suave transición para el margen derecho */
+  margin-right: 0; /* Margen derecho inicial */
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+.menu-container.with-cart {
+  margin-right: 300px; /* Ajusta este valor al ancho de tu carrito */
+}
+
+.menu-card img {
+  width: 90%; /* Ajusta la imagen para que ocupe todo el ancho de la tarjeta */
+  height: 200; /* Mantiene la proporción de la imagen */
+  object-fit: cover; /* Asegura que la imagen cubra completamente el espacio asignado sin distorsionarse */
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+}
+
+.menu-card h3 {
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.menu-card p {
+  color: #555;
+  font-size: 16px;
+}
+.menu-card:hover {
+  transform: scale(1.05);
+}
+
+.cart-container {
+  padding: 10px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+  margin-left: -10px;
+  margin-right: -10px;
+
+}
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100px; /* Fija el ancho al 100% del contenedor padre */
+  margin-bottom: 10px;
+  border-radius: 8px;
+  overflow: hidden; /* Evita que el contenido se desborde */
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 100px; /* Espacio interno suficiente para contenido */
+  background-color: rgb(255, 255, 255); /* Fondo para mejorar la legibilidad */
+  height: auto;
+}
+.cart-item-img {
+  width: 100%; /* Asegura que la imagen ocupe todo el ancho disponible */
+  height: 80px; /* Altura fija para la imagen */
+ /* Asegura que la imagen cubra completamente el área asignada sin deformarse */
+  border-radius: 5px 5px 0 0; /* Redondea solo las esquinas superiores de la imagen */
+}
+
+.cart-item div {
+  margin: 0 10px;
+ 
+}
+.cart-item-quantity {
+  font-size: 16px; /* Tamaño adecuado para la cantidad */
+}
+.cart-item button:hover {
+  background-color: #A93226; /* Cambio de color al pasar el ratón */
+}
+.cart-item button {
+  margin-left: 5px;
+  padding: 5px 10px; /* Pequeños pero funcionales */
+  border: none;
+  background-color: #C0392B; /* Color de botones para acciones */
+  color: rgb(255, 255, 255);
+  border-radius: 5px;
+  cursor: pointer;
+}
+.cart-item-controls {
+  display: flex;
+  align-items: center;
+  padding-right: 10px; /* Espacio a la derecha de los controles */
+}
+.cart-item-info {
+  flex-grow: 1; /* Permite que el contenedor de información ocupe el espacio restante */
+  padding-left: 10px; /* Espacio a la izquierda del texto */
+  overflow: hidden; /* Evita que el texto se salga de su contenedor */
+}
+.cart-card {
+  display: flex;
+  align-items: center;
+  background-color: #fff;
+  border-radius: 8px;
+  margin: 5px 0;
+  padding: 3px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 3px solid #ff0000;
+  width: 250px; /* Tamaño ajustado para la imagen en el carrito */
+  height: 100px;
+  font-size: 15px; 
+}
+
+.cart-image {
+  width: 60px; /* Tamaño ajustado para la imagen en el carrito */
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px; /* Bordes redondeados para la imagen */
+  margin-right: 10px;
+  margin-bottom: 10px
+  
+
+}
+
+.cart-sidebar {
+  position: fixed;
+  right: 0;
+  height: 60px;
+  height: calc(100vh - 168px); /* Ajusta la altura restante de la vista */
+  top: 80px;
+  width: 300px; /* Asegúrate de que este ancho coincida con el margen derecho del contenedor */
+  height: 576px;
+  background-color: rgb(255, 192, 192);
+  box-shadow: -2px 0 8px rgba(0,0,0,0.1);
+  padding: 18px;
+  transform: translateX(100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
+
+  border-left: 2px solid #ff0000; /* Borde sutil a la izquierda */
+  overflow-y: auto;
+  border-radius: 35px;
+}
+
+.cart-sidebar.open {
+  transform: translateX(0);
+}
+.cart-info {
+  flex-grow: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.cart-info div {
+  display: flex;
+  align-items: center;
+}
+
+button {
+  padding: 0px 10px;
+  border: none;
+  background-color: #C0392B;
+  color: white;
+  border-radius: 100px;
+  cursor: pointer;
+  font-size: 25px;
+  
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.product-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.product-card {
+  width: 200px;
+  margin: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.product-image {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+.product-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Centra los elementos horizontalmente */
+  align-items: flex-start; /* Alinea los elementos en la parte superior */
+  gap: 30px; /* Espacio entre las tarjetas */
+}
+.product-grid .card img {
+  width: 100%; /* Asegura que la imagen ocupe todo el ancho de la tarjeta */
+  height: 200px; /* Altura fija para todas las imágenes */
+  object-fit: cover; /* Asegura que la imagen cubra el área designada sin distorsionarse */
+}
+.product-grid .card-body {
+  min-height: 150px; /* Altura mínima para el cuerpo de la tarjeta, ajusta según necesidad */
+}
+.product-info {
+  padding: 10px;
+  text-align: center;
+}
+
+
+@media (max-width: 600px) {
+  .cart-card {
+    flex-direction: column;
+    align-items: start;
+  }
+  
+
+  .cart-info {
+    flex-direction: column;
+    align-items: start;
+  }
+}
+@media (max-width: 768px) {
+  /* Para tabletas y dispositivos más pequeños, ajusta el ancho */
+  .cart-sidebar {
+    width: 80%; /* Hace el carrito más ancho para mejorar la accesibilidad en pantallas pequeñas */
+    top: 50px; /* Ajusta si la altura del header es diferente en dispositivos móviles */
+    height: calc(100vh - 50px); /* Ajusta la altura correspondiente */
+  }
+}
+
+
+@media (max-width: 480px) {
+  /* Ajustes para móviles */
+  .cart-sidebar {
+    width: 100%; /* Ocupa toda la anchura de la pantalla para facilitar el acceso */
+    top: 45px; /* Reduce la altura del header si es necesario */
+    height: calc(100vh - 45px); /* Asegura que ocupe toda la altura visible */
+  }
+}
+
+.toggle-cart-button {
+  padding: 0px;
+  color: rgb(213, 216, 40);
+  background-color: #ffffff; /* Un rojo un poco más claro para que destaque */
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  margin-left: 200px; /* Empuja el botón del carrito al extremo derecho */
+  margin: 0 0px;
+  color: rgb(235, 200, 47);
+  text-decoration: none;
+  border: 3px solid #f5f5f5;
+  border-radius: 35px;
+  font-weight: bold;
+
+
+  /* Sombra para darle un efecto elevado */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.toggle-cart-button:hover {
+  background-color: #c0392b; /* Un rojo más oscuro al pasar el mouse */
+  transform: scale(1.05); /* Ligero aumento de tamaño al pasar el mouse */
+}
+
+.toggle-cart-button:focus {
+  outline: none; /* Remueve el borde que aparece al hacer click */
+  box-shadow: 0 0 0 2px rgba(199, 21, 133, 0.5); /* Sombra más llamativa para el foco */
+}
+.category-title {
+  font-size: 60px; /* Ajusta el tamaño de la fuente según necesites */
+  color: #ffffff; /* Color del texto */
+  text-align: center; /* Centra el texto */
+  padding-bottom: 10px; /* Espacio debajo del texto para no superponerse a la línea */
+  margin-bottom: 20px; /* Espacio debajo de la línea para separar del contenido siguiente */
+  font-weight: bold;
+}
+
+.category-container:last-child {
+  border-bottom: none; /* Elimina la línea del último elemento para evitar duplicidad */
+}
+@media (max-width: 768px) {
+  .cart-item {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cart-item-info, .cart-item-controls {
+    width: 100%; /* Ocupa todo el ancho en pantallas pequeñas */
+    text-align: center; /* Centra el texto en dispositivos móviles */
+  }
+}
+@media (max-width: 768px) {
+  .cart-container {
+      max-width: 100%; /* Ocupa el ancho completo */
+      padding: 5px;
+  }
+
+  .cart-item {
+      flex-direction: column; /* Coloca los elementos en columna */
+      align-items: center;
+      text-align: center;
+  }
+
+  .cart-item img {
+      max-width: 100%; /* Ajusta las imágenes al ancho del contenedor */
+      height: auto;
+  }
+
+  .cart-item-details {
+      margin-top: 10px; /* Añade espacio entre los detalles */
+  }
+}
