@@ -15,8 +15,6 @@ public class Categoria implements Serializable {
     @Column(name = "XCATNOM", length = 100, nullable = false)
     private String nombre;
 
-    // Métodos Getter y Setter
-
     public Integer getId() {
         return id;
     }

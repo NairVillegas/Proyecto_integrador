@@ -21,8 +21,6 @@ public class Usuario implements Serializable {
     @Column(name = "XUSRROL", length = 20)
     private String rol = "Administrador";
 
-    // Métodos Getter y Setter
-
     public Integer getId() {
         return id;
     }

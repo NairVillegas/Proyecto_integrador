@@ -18,7 +18,6 @@ public class ClienteController {
     @Autowired
     private ClienteService clienteService;
 
-    // Endpoint para login
     @PostMapping("/login")
     public ResponseEntity<Cliente> login(@RequestBody Map<String, String> credentials) {
         String email = credentials.get("email");
@@ -28,15 +27,14 @@ public class ClienteController {
 
         if (cliente.isPresent() && cliente.get().getContrasena().equals(contrasena)) {
             Cliente clienteLogueado = cliente.get();
-            clienteLogueado.setIsActive(true); // Cambiar a activo
-            clienteService.save(clienteLogueado); // Guardar el estado actualizado en la base de datos
-            return ResponseEntity.ok(clienteLogueado); // Enviar el cliente completo como JSON
+            clienteLogueado.setIsActive(true);
+            clienteService.save(clienteLogueado);
+            return ResponseEntity.ok(clienteLogueado);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
-    // Endpoint para logout
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@RequestBody Map<String, String> credentials) {
         String email = credentials.get("email");
@@ -49,7 +47,7 @@ public class ClienteController {
 
         if (cliente.isPresent()) {
             Cliente clienteLogueado = cliente.get();
-            clienteLogueado.setIsActive(false); // Cambiar a inactivo
+            clienteLogueado.setIsActive(false);
             clienteService.save(clienteLogueado);
             return ResponseEntity.ok("Cierre de sesión exitoso");
         } else {
@@ -57,30 +55,26 @@ public class ClienteController {
         }
     }
 
-    // Obtener todos los clientes
     @GetMapping
     public List<Cliente> getAllClientes() {
         return clienteService.findAll();
     }
 
-    // Obtener un cliente por ID
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> getClienteById(@PathVariable Integer id) {
         Optional<Cliente> cliente = clienteService.findById(id);
         return cliente.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Crear un nuevo cliente
     @PostMapping
     public ResponseEntity<Cliente> createCliente(@RequestBody Cliente cliente) {
         if (cliente == null || cliente.getDni() == null || cliente.getContrasena() == null) {
-            return ResponseEntity.badRequest().build(); // Validación mínima
+            return ResponseEntity.badRequest().build();
         }
         Cliente savedCliente = clienteService.save(cliente);
         return ResponseEntity.ok(savedCliente);
     }
 
-    // Actualizar un cliente existente
     @PutMapping("/{id}")
     public ResponseEntity<Cliente> updateCliente(@PathVariable Integer id, @RequestBody Cliente clienteDetails) {
         Optional<Cliente> cliente = clienteService.findById(id);
@@ -90,19 +84,18 @@ public class ClienteController {
             clienteToUpdate.setApellido(clienteDetails.getApellido());
             clienteToUpdate.setEmail(clienteDetails.getEmail());
             clienteToUpdate.setTelefono(clienteDetails.getTelefono());
-            clienteToUpdate.setDni(clienteDetails.getDni()); // Actualizar el DNI
-            clienteToUpdate.setContrasena(clienteDetails.getContrasena()); // Actualizar la contraseña
+            clienteToUpdate.setDni(clienteDetails.getDni());
+            clienteToUpdate.setContrasena(clienteDetails.getContrasena());
             return ResponseEntity.ok(clienteService.save(clienteToUpdate));
         } else {
             return ResponseEntity.notFound().build();
         }
     }
 
-    // Eliminar un cliente por ID
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCliente(@PathVariable Integer id) {
         if (!clienteService.findById(id).isPresent()) {
-            return ResponseEntity.notFound().build(); // Validación si no existe el ID
+            return ResponseEntity.notFound().build();
         }
         clienteService.deleteById(id);
         return ResponseEntity.noContent().build();

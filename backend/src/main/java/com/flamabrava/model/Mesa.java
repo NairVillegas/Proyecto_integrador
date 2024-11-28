@@ -18,8 +18,6 @@ public class Mesa implements Serializable {
     @Column(name = "NMESCAP", nullable = false)
     private Integer capacidad;
 
-    // Métodos Getter y Setter
-
     public Integer getId() {
         return id;
     }

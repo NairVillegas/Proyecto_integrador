@@ -27,8 +27,6 @@ public class DetallePedido implements Serializable {
     @Column(name = "NDETTOT", precision = 10, scale = 2, nullable = false)
     private BigDecimal total;
 
-    // Métodos Getter y Setter
-
     public Integer getId() {
         return id;
     }

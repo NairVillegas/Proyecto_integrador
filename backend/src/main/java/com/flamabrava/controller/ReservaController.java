@@ -29,7 +29,6 @@ public class ReservaController {
 
     @PostMapping
     public Reserva createReserva(@RequestBody Reserva reserva) {
-        // Validación opcional de relaciones o datos nulos
         if (reserva.getMesa() == null || reserva.getCliente() == null || reserva.getFecha() == null) {
             throw new IllegalArgumentException("Mesa, Cliente y Fecha son obligatorios");
         }

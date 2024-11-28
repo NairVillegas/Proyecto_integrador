@@ -28,7 +28,6 @@ public class PedidoService {
     }
 
     public Pedido save(Pedido pedido) {
-        // Verificar si el cliente ya está persistido
         if (pedido.getCliente() != null && pedido.getCliente().getId() == null) {
             Cliente clientePersistido = clienteRepository.save(pedido.getCliente());
             pedido.setCliente(clientePersistido);

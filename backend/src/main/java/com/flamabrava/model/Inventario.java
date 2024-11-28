@@ -21,8 +21,6 @@ public class Inventario implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fechaMovimiento = new Date();
 
-    // Métodos Getter y Setter
-
     public Integer getId() {
         return id;
     }

@@ -29,7 +29,6 @@ public class PedidoController {
 
     @PostMapping
     public Pedido createPedido(@RequestBody Pedido pedido) {
-        // Asegurar que el estado predeterminado sea "Pendiente" si no se especifica
         if (pedido.getEstado() == null || pedido.getEstado().isEmpty()) {
             pedido.setEstado("Pendiente");
         }

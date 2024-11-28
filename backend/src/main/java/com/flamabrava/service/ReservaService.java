@@ -12,7 +12,7 @@ import java.util.Optional;
 public class ReservaService {
 
     @Autowired
-    private ReservaRepository reservaRepository; // Ajustado para coherencia con la entidad
+    private ReservaRepository reservaRepository;
 
     public List<Reserva> findAll() {
         return reservaRepository.findAll();

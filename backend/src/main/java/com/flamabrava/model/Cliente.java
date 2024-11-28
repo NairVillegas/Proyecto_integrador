@@ -31,9 +31,8 @@ public class Cliente implements Serializable {
     private String contrasena;
 
     @Column(name = "IS_ACTIVE")
-    private Boolean isActive = false; // Asegúrate de usar Boolean para evitar null pointer
+    private Boolean isActive = false;
 
-    // Getters y Setters
     public Integer getId() {
         return id;
     }

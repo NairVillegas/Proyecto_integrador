@@ -28,8 +28,6 @@ public class Pedido implements Serializable {
     @Column(name = "NPEDTOT")
     private BigDecimal total;
 
-    // Métodos Getter y Setter
-
     public Integer getId() {
         return id;
     }

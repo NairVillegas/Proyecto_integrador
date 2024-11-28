@@ -28,8 +28,6 @@ public class Reserva implements Serializable {
     @Column(name = "XRESOBS", length = 400)
     private String observaciones;
 
-    // Métodos Getter y Setter
-
     public Integer getId() {
         return id;
     }

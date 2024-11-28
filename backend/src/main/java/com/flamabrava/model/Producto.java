@@ -26,8 +26,6 @@ public class Producto implements Serializable {
     @JoinColumn(name = "CCATID")
     private Categoria categoria;
 
-    // Métodos Getter y Setter
-
     public Integer getId() {
         return id;
     }
