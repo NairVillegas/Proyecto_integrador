@@ -1,8 +1,11 @@
 package com.flamabrava.controller;
 
 import com.flamabrava.model.Producto;
+import com.flamabrava.model.Categoria;
 import com.flamabrava.service.ProductoService;
+import com.flamabrava.service.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +19,9 @@ public class ProductoController {
     @Autowired
     private ProductoService productoService;
 
+    @Autowired
+    private CategoriaService categoriaService;
+
     @GetMapping
     public List<Producto> getAllProductos() {
         return productoService.findAll();
@@ -24,12 +30,23 @@ public class ProductoController {
     @GetMapping("/{id}")
     public ResponseEntity<Producto> getProductoById(@PathVariable Integer id) {
         Optional<Producto> producto = productoService.findById(id);
-        return producto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
+        return producto.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     @PostMapping
-    public Producto createProducto(@RequestBody Producto producto) {
-        return productoService.save(producto);
+    public ResponseEntity<Producto> createProducto(@RequestBody Producto producto) {
+
+        Optional<Categoria> categoria = categoriaService.findById(producto.getCategoria().getId());
+
+        if (categoria.isPresent()) {
+
+            producto.setCategoria(categoria.get());
+            Producto nuevoProducto = productoService.save(producto);
+            return new ResponseEntity<>(nuevoProducto, HttpStatus.CREATED);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        }
     }
 
     @PutMapping("/{id}")
@@ -40,16 +57,28 @@ public class ProductoController {
             productoToUpdate.setNombre(productoDetails.getNombre());
             productoToUpdate.setPrecio(productoDetails.getPrecio());
             productoToUpdate.setStock(productoDetails.getStock());
-            productoToUpdate.setCategoria(productoDetails.getCategoria());
-            return ResponseEntity.ok(productoService.save(productoToUpdate));
+
+            Optional<Categoria> categoria = categoriaService.findById(productoDetails.getCategoria().getId());
+            if (categoria.isPresent()) {
+                productoToUpdate.setCategoria(categoria.get());
+                Producto productoActualizado = productoService.save(productoToUpdate);
+                return ResponseEntity.ok(productoActualizado);
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            }
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProducto(@PathVariable Integer id) {
-        productoService.deleteById(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<String> deleteProducto(@PathVariable Integer id) {
+        Optional<Producto> producto = productoService.findById(id);
+        if (producto.isPresent()) {
+            productoService.deleteById(id);
+            return ResponseEntity.ok("Producto eliminado con éxito.");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado.");
+        }
     }
 }

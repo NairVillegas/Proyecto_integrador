@@ -18,15 +18,19 @@ public class UsuarioService {
         return usuarioRepository.findAll();
     }
 
-    public Optional<Usuario> findById(Integer id) {
+    public Optional<Usuario> findById(Long id) {
         return usuarioRepository.findById(id);
+    }
+
+    public Optional<Usuario> findByNombre(String nombre) {
+        return usuarioRepository.findByNombre(nombre);
     }
 
     public Usuario save(Usuario usuario) {
         return usuarioRepository.save(usuario);
     }
 
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         usuarioRepository.deleteById(id);
     }
 }

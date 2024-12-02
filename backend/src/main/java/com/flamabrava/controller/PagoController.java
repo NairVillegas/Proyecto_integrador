@@ -2,11 +2,7 @@ package com.flamabrava.controller;
 
 import com.flamabrava.service.MercadoPagoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Map;
@@ -20,7 +16,7 @@ public class PagoController {
 
     @PostMapping("/crear-preferencia")
     public String crearPreferencia(@RequestBody List<Map<String, Object>> productos) {
+
         return mercadoPagoService.createPreference(productos);
     }
-
 }

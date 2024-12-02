@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "GESPEDTBL")
@@ -27,6 +28,10 @@ public class Pedido implements Serializable {
 
     @Column(name = "NPEDTOT")
     private BigDecimal total;
+
+    @ManyToMany
+    @JoinTable(name = "PEDIDO_PRODUCTO", joinColumns = @JoinColumn(name = "PEDIDO_ID"), inverseJoinColumns = @JoinColumn(name = "PRODUCTO_ID"))
+    private List<Producto> productos;
 
     public Integer getId() {
         return id;
@@ -66,5 +71,13 @@ public class Pedido implements Serializable {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    public List<Producto> getProductos() {
+        return productos;
+    }
+
+    public void setProductos(List<Producto> productos) {
+        this.productos = productos;
     }
 }

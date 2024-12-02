@@ -3,6 +3,7 @@ package com.flamabrava.controller;
 import com.flamabrava.model.Usuario;
 import com.flamabrava.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,38 +18,60 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @GetMapping
-    public List<Usuario> getAllUsuarios() {
-        return usuarioService.findAll();
+    public ResponseEntity<List<Usuario>> getAllUsuarios() {
+        return ResponseEntity.ok(usuarioService.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Usuario> getUsuarioById(@PathVariable Integer id) {
+    public ResponseEntity<Usuario> getUsuarioById(@PathVariable Long id) {
         Optional<Usuario> usuario = usuarioService.findById(id);
         return usuario.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody Usuario loginRequest) {
+        String nombre = loginRequest.getNombre();
+        String contrasena = loginRequest.getPassword();
+
+        Optional<Usuario> usuarioOpt = usuarioService.findByNombre(nombre);
+
+        if (usuarioOpt.isPresent()) {
+            Usuario usuario = usuarioOpt.get();
+            if (usuario.getPassword().equals(contrasena)) {
+                if (usuario.getRol() == null || usuario.getRol().isEmpty()) {
+                    usuario.setRol("Cliente");
+                }
+                return ResponseEntity.ok(usuario);
+            }
+        }
+
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuario o contraseña incorrectos");
+    }
+
     @PostMapping
-    public Usuario createUsuario(@RequestBody Usuario usuario) {
-        // Validar campos obligatorios
+    public ResponseEntity<Usuario> createUsuario(@RequestBody Usuario usuario) {
+
         if (usuario.getNombre() == null || usuario.getNombre().isEmpty()) {
-            throw new IllegalArgumentException("El nombre es obligatorio");
+            return ResponseEntity.badRequest().body(null);
         }
         if (usuario.getPassword() == null || usuario.getPassword().isEmpty()) {
-            throw new IllegalArgumentException("La contraseña es obligatoria");
+            return ResponseEntity.badRequest().body(null);
         }
-        // Asignar rol predeterminado si no se proporciona
+
         if (usuario.getRol() == null || usuario.getRol().isEmpty()) {
-            usuario.setRol("Administrador");
+            usuario.setRol("Trabajador");
         }
-        return usuarioService.save(usuario);
+
+        Usuario newUser = usuarioService.save(usuario);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Usuario> updateUsuario(@PathVariable Integer id, @RequestBody Usuario usuarioDetails) {
+    public ResponseEntity<Usuario> updateUsuario(@PathVariable Long id, @RequestBody Usuario usuarioDetails) {
         Optional<Usuario> usuario = usuarioService.findById(id);
         if (usuario.isPresent()) {
             Usuario usuarioToUpdate = usuario.get();
-            // Validar campos obligatorios
+
             if (usuarioDetails.getNombre() != null && !usuarioDetails.getNombre().isEmpty()) {
                 usuarioToUpdate.setNombre(usuarioDetails.getNombre());
             }
@@ -58,15 +81,21 @@ public class UsuarioController {
             if (usuarioDetails.getRol() != null && !usuarioDetails.getRol().isEmpty()) {
                 usuarioToUpdate.setRol(usuarioDetails.getRol());
             }
-            return ResponseEntity.ok(usuarioService.save(usuarioToUpdate));
+
+            Usuario updatedUser = usuarioService.save(usuarioToUpdate);
+            return ResponseEntity.ok(updatedUser);
         } else {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUsuario(@PathVariable Integer id) {
-        usuarioService.deleteById(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Void> deleteUsuario(@PathVariable Long id) {
+        if (usuarioService.findById(id).isPresent()) {
+            usuarioService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 }

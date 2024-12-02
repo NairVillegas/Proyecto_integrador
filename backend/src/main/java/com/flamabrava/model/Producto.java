@@ -2,7 +2,6 @@ package com.flamabrava.model;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 @Entity
 @Table(name = "GESPROTBL")
@@ -16,8 +15,8 @@ public class Producto implements Serializable {
     @Column(name = "XPRONOM", length = 100, nullable = false)
     private String nombre;
 
-    @Column(name = "NPROPREC", precision = 10, scale = 2, nullable = false)
-    private BigDecimal precio;
+    @Column(name = "NPROPREC", nullable = false)
+    private Double precio;
 
     @Column(name = "NPROSTK", nullable = false)
     private Integer stock;
@@ -42,11 +41,11 @@ public class Producto implements Serializable {
         this.nombre = nombre;
     }
 
-    public BigDecimal getPrecio() {
+    public Double getPrecio() {
         return precio;
     }
 
-    public void setPrecio(BigDecimal precio) {
+    public void setPrecio(Double precio) {
         this.precio = precio;
     }
 

@@ -1,22 +1,24 @@
 package com.flamabrava.model;
 
 import jakarta.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "GESMESTBL")
-public class Mesa implements Serializable {
+public class Mesa {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "CMESID")
     private Integer id;
 
-    @Column(name = "NMESNUM", nullable = false)
+    @Column(name = "NMESNUM")
     private Integer numero;
 
-    @Column(name = "NMESCAP", nullable = false)
+    @Column(name = "NMESCAP")
     private Integer capacidad;
+
+    @Column(name = "ESTADO", nullable = false, length = 10)
+    private String estado = "Libre";
 
     public Integer getId() {
         return id;
@@ -40,5 +42,13 @@ public class Mesa implements Serializable {
 
     public void setCapacidad(Integer capacidad) {
         this.capacidad = capacidad;
+    }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public void setEstado(String estado) {
+        this.estado = estado;
     }
 }

@@ -29,9 +29,16 @@ public class ReservaController {
 
     @PostMapping
     public Reserva createReserva(@RequestBody Reserva reserva) {
-        if (reserva.getMesa() == null || reserva.getCliente() == null || reserva.getFecha() == null) {
+
+        if (reserva.getClienteId() == null || reserva.getMesa() == null || reserva.getFecha() == null) {
+
             throw new IllegalArgumentException("Mesa, Cliente y Fecha son obligatorios");
         }
+
+        if (reserva.getObservaciones() == null) {
+            reserva.setObservaciones("");
+        }
+
         return reservaService.save(reserva);
     }
 
@@ -43,7 +50,7 @@ public class ReservaController {
             reservaToUpdate.setMesa(reservaDetails.getMesa());
             reservaToUpdate.setFecha(reservaDetails.getFecha());
             reservaToUpdate.setObservaciones(reservaDetails.getObservaciones());
-            reservaToUpdate.setCliente(reservaDetails.getCliente());
+            reservaToUpdate.setClienteId(reservaDetails.getClienteId());
             return ResponseEntity.ok(reservaService.save(reservaToUpdate));
         } else {
             return ResponseEntity.notFound().build();

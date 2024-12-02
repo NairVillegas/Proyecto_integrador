@@ -22,15 +22,32 @@ public class ClienteService {
         return clienteRepository.findById(id);
     }
 
-    public Cliente save(Cliente cliente) {
-        return clienteRepository.save(cliente);
-    }
-
     public void deleteById(Integer id) {
         clienteRepository.deleteById(id);
     }
 
+    public Cliente save(Cliente cliente) {
+        if (cliente.getRol() == null || cliente.getRol().isEmpty()) {
+            cliente.setRol("Cliente");
+        }
+        return clienteRepository.save(cliente);
+    }
+
     public Optional<Cliente> findByEmail(String email) {
         return clienteRepository.findByEmail(email);
+    }
+
+    public Optional<Cliente> updateTelefono(Integer id, String telefono) {
+        Optional<Cliente> cliente = clienteRepository.findById(id);
+
+        if (cliente.isPresent()) {
+            Cliente existingCliente = cliente.get();
+            if (telefono != null && !telefono.isEmpty()) {
+                existingCliente.setTelefono(telefono);
+                clienteRepository.save(existingCliente);
+                return Optional.of(existingCliente);
+            }
+        }
+        return Optional.empty();
     }
 }

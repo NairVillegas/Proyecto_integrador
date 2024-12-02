@@ -13,10 +13,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
             .authorizeRequests()
-                .antMatchers("/public/**").permitAll()  // Permite el acceso a la ruta /public
-                .anyRequest().authenticated()          // Requiere autenticación para otras rutas
+                .antMatchers("/public/**").permitAll()  
+                .anyRequest().authenticated()         
             .and()
-            .formLogin()                               // Habilita el formulario de login
+            .formLogin()                              
                 .permitAll()
             .and()
             .logout()

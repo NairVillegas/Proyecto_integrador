@@ -29,6 +29,7 @@ public class PedidoController {
 
     @PostMapping
     public Pedido createPedido(@RequestBody Pedido pedido) {
+
         if (pedido.getEstado() == null || pedido.getEstado().isEmpty()) {
             pedido.setEstado("Pendiente");
         }

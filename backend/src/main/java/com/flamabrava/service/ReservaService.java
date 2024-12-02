@@ -23,6 +23,11 @@ public class ReservaService {
     }
 
     public Reserva save(Reserva reserva) {
+
+        if (reserva.getClienteId() == null || reserva.getMesa() == null || reserva.getFecha() == null) {
+            throw new IllegalArgumentException("Cliente, Mesa y Fecha son obligatorios");
+        }
+
         return reservaRepository.save(reserva);
     }
 
