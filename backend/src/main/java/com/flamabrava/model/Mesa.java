@@ -1,8 +1,11 @@
 package com.flamabrava.model;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 import jakarta.persistence.*;
 
 @Entity
+@CrossOrigin(origins = "https://polleriaflamabrava.netlify.app")
 @Table(name = "GESMESTBL")
 public class Mesa {
 

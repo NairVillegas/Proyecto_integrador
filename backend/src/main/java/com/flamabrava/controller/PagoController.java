@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@CrossOrigin(origins = "https://polleriaflamabrava.netlify.app")
 @RestController
 @RequestMapping("/api/pago")
 public class PagoController {

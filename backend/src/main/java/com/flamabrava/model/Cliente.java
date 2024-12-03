@@ -5,7 +5,10 @@ import jakarta.validation.constraints.NotBlank;
 
 import java.io.Serializable;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 @Entity
+@CrossOrigin(origins = "https://polleriaflamabrava.netlify.app")
 @Table(name = "GESCLITBL")
 public class Cliente implements Serializable {
 

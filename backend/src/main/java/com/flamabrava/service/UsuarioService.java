@@ -4,11 +4,13 @@ import com.flamabrava.model.Usuario;
 import com.flamabrava.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@CrossOrigin(origins = "https://polleriaflamabrava.netlify.app")
 public class UsuarioService {
 
     @Autowired

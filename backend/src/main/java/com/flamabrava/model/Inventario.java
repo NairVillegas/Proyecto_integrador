@@ -4,7 +4,10 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 @Entity
+@CrossOrigin(origins = "https://polleriaflamabrava.netlify.app")
 @Table(name = "GESINVTBL")
 public class Inventario implements Serializable {
 

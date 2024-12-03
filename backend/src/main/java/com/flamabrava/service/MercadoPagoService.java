@@ -4,6 +4,7 @@ import com.mercadopago.MercadoPagoConfig;
 import com.mercadopago.client.preference.*;
 import com.mercadopago.resources.preference.Preference;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
+@CrossOrigin(origins = "https://polleriaflamabrava.netlify.app")
 public class MercadoPagoService {
 
         public String createPreference(List<Map<String, Object>> productos) {

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "https://polleriaflamabrava.netlify.app")
 @RestController
 @RequestMapping("/api/productos")
 public class ProductoController {
@@ -81,4 +82,10 @@ public class ProductoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Producto no encontrado.");
         }
     }
+
+    @GetMapping("/api/productos")
+    public List<Producto> getProductos() {
+        return productoService.findAll();
+    }
+
 }

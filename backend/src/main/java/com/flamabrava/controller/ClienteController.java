@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+@CrossOrigin(origins = "https://polleriaflamabrava.netlify.app")
 @RestController
 @RequestMapping("/api/clientes")
 public class ClienteController {

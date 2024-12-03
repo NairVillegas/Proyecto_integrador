@@ -6,7 +6,10 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 @Entity
+@CrossOrigin(origins = "https://polleriaflamabrava.netlify.app")
 @Table(name = "GESPEDTBL")
 public class Pedido implements Serializable {
 

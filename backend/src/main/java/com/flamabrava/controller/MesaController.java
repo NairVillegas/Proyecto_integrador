@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = "https://polleriaflamabrava.netlify.app")
 @RestController
 @RequestMapping("/api/mesas")
 public class MesaController {

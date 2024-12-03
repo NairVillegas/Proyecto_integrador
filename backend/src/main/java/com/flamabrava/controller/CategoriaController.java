@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+@CrossOrigin(origins = "https://polleriaflamabrava.netlify.app")
 @RestController
 @RequestMapping("/api/categorias")
 public class CategoriaController {
@@ -63,4 +64,10 @@ public class CategoriaController {
         categoriaService.deleteById(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/api/categorias")
+    public List<Categoria> getCategorias() {
+        return categoriaService.findAll();
+    }
+
 }
