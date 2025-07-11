@@ -3,57 +3,63 @@ package com.flamabrava.model;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
-
-import org.springframework.web.bind.annotation.CrossOrigin;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
-@CrossOrigin(origins = "https://polleriaflamabrava.netlify.app")
 @Table(name = "GESRESTBL")
+@NamedQueries({
+    @NamedQuery(
+        name = "Reserva.findBetween",
+        query = "SELECT r FROM Reserva r WHERE r.fechaInicio >= :start AND r.fechaFin <= :end"
+    )
+})
 public class Reserva {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    // <-- Ajustamos este nombre a "cresid" para que coincida con la tabla real
-    @Column(name = "cresid")
-    private Integer idReserva;
+    @Column(name = "cresid") // PK
+    private Integer id;
 
-    // <-- Asegúrate de que el nombre de columna ("ccllid") coincide con tu base de datos
+    @Transient
+    private Cliente cliente;
+
     @Column(name = "ccllid", nullable = false)
     private Integer idUsuario;
 
-    // <-- El JoinColumn debe apuntar a "cmesid", que es la columna real en la BD
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "cmesid", nullable = false)
     private Mesa mesa;
 
-    // <-- La columna real en tu BD se llama "fresfecha"
-    @Column(name = "fresfecha", nullable = false)
-    private LocalDateTime fecha;
+    @Column(name = "fecha_hora_inicio", nullable = false)
+    private LocalDateTime fechaInicio;
 
-    // <-- Coincide: "num_personas" en tu tabla
+    @Column(name = "fecha_hora_fin", nullable = false)
+    private LocalDateTime fechaFin;
+
     @Column(name = "num_personas", nullable = false)
     private Integer numPersonas;
 
-    // <-- Si tu tabla actual no tiene estado, puedes omitirlo; si la tuvieras, ajústalo:
-    @Column(name = "estado", length = 20)
+    @Column(name = "estado", length = 20, nullable = false)
     private String estado;
 
-    // <-- La columna real se llama "xresobs"
-    @Column(name = "xresobs", length = 400)
+    @Column(name = "xresobs", length = 255)
     private String observaciones;
 
-    // ─── Getters / Setters ───
 
-    public Integer getIdReserva() {
-        return idReserva;
+    // --- Getters y setters ---
+
+    public Integer getId() {
+        return id;
     }
-    public void setIdReserva(Integer idReserva) {
-        this.idReserva = idReserva;
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Integer getIdUsuario() {
         return idUsuario;
     }
+
     public void setIdUsuario(Integer idUsuario) {
         this.idUsuario = idUsuario;
     }
@@ -61,20 +67,31 @@ public class Reserva {
     public Mesa getMesa() {
         return mesa;
     }
+
     public void setMesa(Mesa mesa) {
         this.mesa = mesa;
     }
 
-    public LocalDateTime getFecha() {
-        return fecha;
+    public LocalDateTime getFechaInicio() {
+        return fechaInicio;
     }
-    public void setFecha(LocalDateTime fecha) {
-        this.fecha = fecha;
+
+    public void setFechaInicio(LocalDateTime fechaInicio) {
+        this.fechaInicio = fechaInicio;
+    }
+
+    public LocalDateTime getFechaFin() {
+        return fechaFin;
+    }
+
+    public void setFechaFin(LocalDateTime fechaFin) {
+        this.fechaFin = fechaFin;
     }
 
     public Integer getNumPersonas() {
         return numPersonas;
     }
+
     public void setNumPersonas(Integer numPersonas) {
         this.numPersonas = numPersonas;
     }
@@ -82,6 +99,7 @@ public class Reserva {
     public String getEstado() {
         return estado;
     }
+
     public void setEstado(String estado) {
         this.estado = estado;
     }
@@ -89,7 +107,14 @@ public class Reserva {
     public String getObservaciones() {
         return observaciones;
     }
+
     public void setObservaciones(String observaciones) {
         this.observaciones = observaciones;
     }
+        public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+     public Cliente getCliente() {
+    return cliente;
+  }
 }

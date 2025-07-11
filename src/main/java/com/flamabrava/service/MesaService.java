@@ -37,4 +37,7 @@ public class MesaService {
                                                   Integer numPersonas) {
         return mesaRepository.findMesasDisponiblesExactas(horaInicio, horaFin, numPersonas);
     }
+
+    
+    
 }
