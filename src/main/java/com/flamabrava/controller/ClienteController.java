@@ -24,47 +24,77 @@ public class ClienteController {
     @Autowired
     private UsuarioService usuarioService;
 
+    // -------------- CRUD BÁSICO ----------------
+
     @GetMapping
     public ResponseEntity<List<Cliente>> getAllClientes() {
-        List<Cliente> clientes = clienteService.findAll();
-        return ResponseEntity.ok(clientes);
+        return ResponseEntity.ok(clienteService.findAll());
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Cliente> getClienteById(@PathVariable Integer id) {
-        Optional<Cliente> cliente = clienteService.findById(id);
+        return clienteService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
 
-        if (cliente.isPresent()) {
-            return ResponseEntity.ok(cliente.get());
+    @PutMapping("/{id}")
+    public ResponseEntity<Cliente> updateTelefono(
+            @PathVariable Integer id,
+            @RequestBody Cliente cliente) {
+        return clienteService.updateTelefono(id, cliente.getTelefono())
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCliente(@PathVariable Integer id) {
+        if (clienteService.findById(id).isPresent()) {
+            clienteService.deleteById(id);
+            return ResponseEntity.noContent().build();
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.notFound().build();
         }
     }
 
+    // ---------------- AUTENTICACIÓN ----------------
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
-        String email = credentials.get("email");
+        String email      = credentials.get("email");
         String contrasena = credentials.get("contrasena");
 
-        Optional<Cliente> cliente = clienteService.findByEmail(email);
-        if (cliente.isPresent()) {
-            Cliente clienteLogueado = cliente.get();
-            if (clienteLogueado.getContrasena().equals(contrasena)) {
-                clienteLogueado.setIsActive(true);
-                clienteService.save(clienteLogueado);
-                return ResponseEntity.ok(clienteLogueado);
+        // Intentamos cliente primero
+        Optional<Cliente> oc = clienteService.findByEmail(email);
+        if (oc.isPresent()) {
+            Cliente c = oc.get();
+            if (!c.getEmailVerified()) {
+                // Aún no ha confirmado su e-mail
+                return ResponseEntity
+                    .status(HttpStatus.FORBIDDEN)
+                    .body("Debe verificar su correo antes de iniciar sesión");
+            }
+            if (c.getContrasena().equals(contrasena)) {
+                c.setIsActive(true);
+                clienteService.save(c);
+                return ResponseEntity.ok(c);
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta para cliente");
+                return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Contraseña incorrecta");
             }
         }
 
-        Optional<Usuario> usuario = usuarioService.findByNombre(email);
-        if (usuario.isPresent()) {
-            Usuario usuarioLogueado = usuario.get();
-            if (usuarioLogueado.getPassword().equals(contrasena)) {
-                return ResponseEntity.ok(usuarioLogueado);
+        // Si no es cliente, intentamos usuario (admin)
+        Optional<Usuario> ou = usuarioService.findByNombre(email);
+        if (ou.isPresent()) {
+            Usuario u = ou.get();
+            if (u.getPassword().equals(contrasena)) {
+                return ResponseEntity.ok(u);
             } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Contraseña incorrecta para usuario");
+                return ResponseEntity
+                    .status(HttpStatus.UNAUTHORIZED)
+                    .body("Contraseña incorrecta");
             }
         }
 
@@ -72,65 +102,82 @@ public class ClienteController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@RequestBody Map<String, String> credentials) {
-        String email = credentials.get("email");
-
+    public ResponseEntity<String> logout(@RequestBody Map<String, String> body) {
+        String email = body.get("email");
         if (email == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Falta el correo electrónico");
+            return ResponseEntity.badRequest().body("Falta el correo electrónico");
         }
-
-        Optional<Cliente> cliente = clienteService.findByEmail(email);
-
-        if (cliente.isPresent()) {
-            Cliente clienteLogueado = cliente.get();
-            clienteLogueado.setIsActive(false);
-            clienteService.save(clienteLogueado);
-            return ResponseEntity.ok("Cierre de sesión exitoso");
+        Optional<Cliente> oc = clienteService.findByEmail(email);
+        if (oc.isPresent()) {
+            Cliente c = oc.get();
+            c.setIsActive(false);
+            clienteService.save(c);
+            return ResponseEntity.ok("Sesión cerrada correctamente");
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente no encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("Cliente no encontrado");
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Cliente> updateTelefono(@PathVariable Integer id, @RequestBody Cliente cliente) {
-        Optional<Cliente> updatedCliente = clienteService.updateTelefono(id, cliente.getTelefono());
+    // --------------- REGISTRO Y VERIFICACIÓN POR CORREO ----------------
 
-        return updatedCliente.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
-    }
-
-    @PostMapping("")
-    public ResponseEntity<Cliente> registerCliente(@RequestBody Cliente cliente) {
-        Optional<Cliente> existingCliente = clienteService.findByEmail(cliente.getEmail());
-
-        if (existingCliente.isPresent()) {
+    /**
+     * Registra un nuevo cliente:
+     * - comprueba duplicado por e-mail,
+     * - genera token de verificación,
+     * - guarda y envía correo.
+     */
+    @PostMapping
+    public ResponseEntity<?> registerCliente(@RequestBody Cliente cliente) {
+        // 1) evitar duplicados
+        if (clienteService.findByEmail(cliente.getEmail()).isPresent()) {
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(null);
+                                 .body("Ya existe un cliente con ese correo");
         }
-
-        if (cliente.getRol() == null || cliente.getRol().isEmpty()) {
-            cliente.setRol("Cliente");
-        }
-
-        Cliente savedCliente = clienteService.save(cliente);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedCliente);
+        // 2) delegar al servicio
+        Cliente saved = clienteService.registerCliente(cliente);
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteCliente(@PathVariable Integer id) {
+    /**
+     * Endpoint al que envía el correo:
+     * GET /api/clientes/verify?token=XYZ
+     */
+    @GetMapping("/verify")
+    public ResponseEntity<String> verifyEmail(@RequestParam String token) {
         try {
-            Optional<Cliente> cliente = clienteService.findById(id);
-            if (cliente.isPresent()) {
-                clienteService.deleteById(id);
-                return ResponseEntity.noContent().build();
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al eliminar el cliente: " + e.getMessage());
+            clienteService.verifyEmailToken(token);
+            return ResponseEntity.ok("Correo verificado correctamente");
+        } catch (IllegalArgumentException ex) {
+            return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body("Token inválido o expirado");
         }
     }
+      @PostMapping("/verify-code")
+  public ResponseEntity<?> verifyCode(@RequestBody Map<String,String> body) {
+    String token = body.get("token");
+    if (token == null || token.isBlank()) {
+      return ResponseEntity
+        .badRequest()
+        .body(Map.of("message","Debe enviar un token de verificación"));
+    }
+
+    return clienteService.findByToken(token)
+      .map(cliente -> {
+        cliente.setEmailVerified(true);
+        // opcional: limpiar el token para que no valga más:
+        cliente.setVerificationToken(null);
+        clienteService.save(cliente);
+        return ResponseEntity.ok(Map.of(
+          "message","Cuenta verificiada correctamente"
+        ));
+      })
+      .orElseGet(() -> ResponseEntity
+        .status(HttpStatus.NOT_FOUND)
+        .body(Map.of("message","Token inválido o expirado"))
+      );
+  }
+
 
 }

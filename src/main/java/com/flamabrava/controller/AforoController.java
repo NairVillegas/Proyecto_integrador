@@ -20,16 +20,6 @@ public class AforoController {
     @Autowired
     private ReservaService reservaService;
 
-    /**
-     * GET /api/aforo?fecha=YYYY-MM-DDTHH:mm:ss
-     * 
-     * Por ejemplo: /api/aforo?fecha=2025-06-02T16:00:00
-     * 
-     * Devuelve un JSON {
-     *     "fecha": "2025-06-02T16:00:00",
-     *     "aforoRestante": 24
-     * }
-     */
     @GetMapping
     public ResponseEntity<Map<String, Object>> obtenerAforo(
             @RequestParam("fecha")

@@ -134,4 +134,5 @@ public class Pedido implements Serializable {
                        .multiply(BigDecimal.valueOf(d.getCantidad())))
             .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
+    
 }

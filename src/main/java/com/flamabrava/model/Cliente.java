@@ -20,6 +20,9 @@ public class Cliente implements Serializable {
     @Column(name = "CCLIID")
     private Integer id;
 
+      @Column(name = "EMAIL_VERIFIED", nullable = true)
+  private Boolean emailVerified = false;      // <— nuevo
+
     @Column(name = "XCLINOM", length = 50, nullable = false)
     @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
@@ -43,6 +46,9 @@ public class Cliente implements Serializable {
 
     @Column(name = "IS_ACTIVE")
     private Boolean isActive = false;
+
+     @Column(name="VERIFICATION_TOKEN", length=64, unique=true)
+  private String verificationToken;
 
     @Column(name = "XCLIROL", length = 20)
     private String rol = "Cliente";
@@ -138,4 +144,18 @@ public class Cliente implements Serializable {
     public void setRol(String rol) {
         this.rol = rol;
     }
-}
+
+   public Boolean getEmailVerified() {
+    return emailVerified;
+  }
+  public void setEmailVerified(Boolean emailVerified) {
+    this.emailVerified = emailVerified;
+  }
+
+  public String getVerificationToken() {
+    return verificationToken;
+  }
+  public void setVerificationToken(String verificationToken) {
+    this.verificationToken = verificationToken;
+  }
+    }

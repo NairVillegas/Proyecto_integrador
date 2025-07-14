@@ -35,9 +35,9 @@ public class ReporteService {
     @Autowired private ClienteService    clienteService;
     @Autowired private ResourceLoader    resourceLoader;
 
-    private static final DateTimeFormatter FMT_FECHA_HORA = 
+    private static final DateTimeFormatter FMT_FECHA_HORA =
         DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-    private static final DateTimeFormatter FMT_META = 
+    private static final DateTimeFormatter FMT_META =
         DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
     /** Sobrecarga para cuando no pasan username */
@@ -56,23 +56,25 @@ public class ReporteService {
         document.open();
 
         // ► 1) Logo
-        // Se carga como "classpath:images/logoflamabrava.png"
+        // Se carga como "classpath:images/logoflamabravas.png"
         try {
-            Resource logoRes = resourceLoader.getResource("classpath:images/logoflamabrava.png");
+            Resource logoRes = resourceLoader.getResource("classpath:images/logoflamabravas.png");
             if (logoRes.exists()) {
                 try (InputStream is = logoRes.getInputStream()) {
                     BufferedImage awtImg = ImageIO.read(is);
                     Image logo = Image.getInstance(awtImg, null);
                     logo.setAlignment(Element.ALIGN_CENTER);
-                    logo.scaleToFit(150, 75);
+                    // AJUSTE: Se aumenta el tamaño del logo
+                    logo.scaleToFit(400, 200);
                     document.add(logo);
                     document.add(Chunk.NEWLINE);
                 }
             } else {
-                // opción borrosa: document.add(new Paragraph("LOGO NO ENCONTRADO"));
+                // Opción en caso de que el logo no se encuentre
+                // document.add(new Paragraph("LOGO NO ENCONTRADO"));
             }
         } catch (Exception e) {
-            // Si falla, no rompe todo
+            // Si falla, no interrumpe la generación del reporte
             e.printStackTrace();
         }
 
@@ -80,7 +82,7 @@ public class ReporteService {
         String timestamp = LocalDateTime.now().format(FMT_META);
         Font metaFont = FontFactory.getFont(FontFactory.HELVETICA, 9, Font.ITALIC);
         Paragraph meta = new Paragraph(
-            String.format("Generado: %s    Usuario: %s", timestamp, username),
+            String.format("Generado: %s      Usuario: %s", timestamp, username),
             metaFont
         );
         meta.setAlignment(Element.ALIGN_RIGHT);
@@ -89,7 +91,9 @@ public class ReporteService {
 
         // ► 3) Título
         Font fTitulo = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 14);
-        document.add(new Paragraph("REPORTE DE RESERVAS Y VENTAS", fTitulo));
+        Paragraph tituloPrincipal = new Paragraph("REPORTE DE RESERVAS Y VENTAS", fTitulo);
+        tituloPrincipal.setAlignment(Element.ALIGN_CENTER);
+        document.add(tituloPrincipal);
         document.add(Chunk.NEWLINE);
 
         Font fNormal = FontFactory.getFont(FontFactory.HELVETICA, 10);
@@ -126,7 +130,15 @@ public class ReporteService {
 
         // ► 6) Reporte de Ventas
         document.newPage();
-        document.add(new Paragraph("REPORTE DE VENTAS", fTitulo));
+        
+        // Se añade el logo y la metadata de nuevo en la segunda página
+       
+        document.add(meta); // Reutilizamos la metadata de la primera página
+        document.add(Chunk.NEWLINE);
+        
+        Paragraph tituloVentas = new Paragraph("REPORTE DE VENTAS", fTitulo);
+        tituloVentas.setAlignment(Element.ALIGN_CENTER);
+        document.add(tituloVentas);
         document.add(Chunk.NEWLINE);
 
         int totalPedidos = pedidos.size();
@@ -134,8 +146,8 @@ public class ReporteService {
                                     .mapToDouble(p -> p.getTotal().doubleValue())
                                     .sum();
         double ingresoMedio = totalPedidos > 0
-                            ? ingresosTot / totalPedidos
-                            : 0;
+                              ? ingresosTot / totalPedidos
+                              : 0;
         Paragraph resumen = new Paragraph(
             String.format(
               "Total pedidos: %d   Ingresos totales: S/ %.2f   Ingreso medio: S/ %.2f",
@@ -170,8 +182,8 @@ public class ReporteService {
             );
             t2.addCell(p.getEstado());
             String det = (p.getDetalles() == null || p.getDetalles().isBlank())
-                       ? "-"
-                       : p.getDetalles();
+                         ? "-"
+                         : p.getDetalles();
             PdfPCell dc = new PdfPCell(new Phrase(det, fNormal));
             dc.setNoWrap(false);
             t2.addCell(dc);
@@ -188,22 +200,22 @@ public class ReporteService {
                                  int mesDesde, int mesHasta,
                                  String titulo, Font fNorm) throws Exception {
         long total = list.stream()
-                   .filter(r -> {
-                       int m = r.getFechaInicio().getMonthValue();
-                       return m >= mesDesde && m <= mesHasta;
-                   }).count();
+                       .filter(r -> {
+                           int m = r.getFechaInicio().getMonthValue();
+                           return m >= mesDesde && m <= mesHasta;
+                       }).count();
         long ex = list.stream()
-                   .filter(r -> {
-                       int m = r.getFechaInicio().getMonthValue();
-                       return m >= mesDesde && m <= mesHasta
-                           && "exitoso".equalsIgnoreCase(r.getEstado());
-                   }).count();
+                      .filter(r -> {
+                          int m = r.getFechaInicio().getMonthValue();
+                          return m >= mesDesde && m <= mesHasta
+                              && "exitoso".equalsIgnoreCase(r.getEstado());
+                      }).count();
         long ca = list.stream()
-                   .filter(r -> {
-                       int m = r.getFechaInicio().getMonthValue();
-                       return m >= mesDesde && m <= mesHasta
-                           && "cancelado".equalsIgnoreCase(r.getEstado());
-                   }).count();
+                      .filter(r -> {
+                          int m = r.getFechaInicio().getMonthValue();
+                          return m >= mesDesde && m <= mesHasta
+                              && "cancelado".equalsIgnoreCase(r.getEstado());
+                      }).count();
         long pe = total - ex - ca;
 
         DefaultPieDataset ds = new DefaultPieDataset();
@@ -225,13 +237,13 @@ public class ReporteService {
         int year = LocalDateTime.now().getYear();
         long total = list.stream().filter(r -> r.getFechaInicio().getYear() == year).count();
         long ex    = list.stream()
-                    .filter(r -> r.getFechaInicio().getYear() == year
-                              && "exitoso".equalsIgnoreCase(r.getEstado()))
-                    .count();
+                         .filter(r -> r.getFechaInicio().getYear() == year
+                                      && "exitoso".equalsIgnoreCase(r.getEstado()))
+                         .count();
         long ca    = list.stream()
-                    .filter(r -> r.getFechaInicio().getYear() == year
-                              && "cancelado".equalsIgnoreCase(r.getEstado()))
-                    .count();
+                         .filter(r -> r.getFechaInicio().getYear() == year
+                                      && "cancelado".equalsIgnoreCase(r.getEstado()))
+                         .count();
         long pe    = total - ex - ca;
 
         DefaultPieDataset ds = new DefaultPieDataset();

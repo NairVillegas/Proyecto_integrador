@@ -98,6 +98,13 @@
       <version>3.5.0</version>
     </dependency>
 
+<!-- Para enviar correos -->
+<dependency>
+  <groupId>org.springframework.boot</groupId>
+  <artifactId>spring-boot-starter-mail</artifactId>
+</dependency>
+
+
     <!-- Stripe -->
     <dependency>
       <groupId>com.stripe</groupId>
