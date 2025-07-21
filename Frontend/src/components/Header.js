@@ -59,6 +59,8 @@ const Header = () => {
         <Nav className="ms-auto navbar-links">
           <Nav.Link href="/" className="nav-text">Inicio</Nav.Link>
           <Nav.Link href="/menu" className="nav-text">Menú</Nav.Link>
+                <Nav.Link href="/mispedidos" className="nav-text">Mis Pedidos</Nav.Link>
+                      <Nav.Link href="/misreservas" className="nav-text">Mis Reservas</Nav.Link>
           <Nav.Link href="/reserva" className="nav-text">Reserva</Nav.Link>
           {usuario ? (
             <Dropdown align="end" className="nav-user-dropdown">

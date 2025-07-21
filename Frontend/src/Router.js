@@ -1,10 +1,12 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import Home from './pages/Home';
 import Menu from './pages/Menu';
 import Cart from './pages/Cart';
 import Login from './pages/LoginRegister';
 import Reserva from './pages/Reserva';
+import Misreservas from './pages/Misreservas';
+import MisPedidos from './pages/Mispedidos'
 import Profile from './pages/Profile';
 import Page_Admin from './CRUD_PAGES/Page_Admin';
 import Clientes from './CRUD_PAGES/clientes';
@@ -19,6 +21,7 @@ import LibroReclamaciones from './components/LibroReclamaciones';
 import CheckoutPage from "./pages/CheckoutPage";
 import SuccessPage from "./pages/SuccessPage";
 import CancelPage from "./pages/CancelPage";
+
 const AppRouter = () => {
   return (
     <Routes>
@@ -28,9 +31,13 @@ const AppRouter = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/reserva" element={<Reserva />} />
       <Route path="/profile" element={<Profile />} />
+        <Route path="misreservas" element={<Misreservas />} />
+        <Route path="/mispedidos" element={<MisPedidos />} />
+
             <Route path="/checkout" element={<CheckoutPage />} />
         <Route path="/success" element={<SuccessPage />} />
       <Route path="/libro" element={<LibroReclamaciones />} />
+        
       
       {/* Rutas del administrador */}
       <Route path="/admin" element={<Page_Admin />}>
@@ -42,6 +49,8 @@ const AppRouter = () => {
         <Route path="reservas" element={<Reservas />} />
         <Route path="pedidos" element={<Pedidos />} /> {/* Nueva ruta de pedidos */}
         <Route path="usuarios" element={<Usuarios />} />
+    
+
       </Route>
     </Routes>
   );

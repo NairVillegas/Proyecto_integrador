@@ -1,0 +1,78 @@
+/* src/pages/Misreservas.css */
+.reservas-container {
+  padding: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #fafafa;
+}
+
+.reservas-title {
+  text-align: center;
+  margin-bottom: 16px;
+  font-size: 1.8rem;
+  color: #333;
+}
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+/* Hacemos que el root sea un flex container en columna */
+#root {
+  display: flex;
+  flex-direction: column;
+}
+
+/* El content tomaría todo el espacio restante */
+.content {
+  flex: 1;
+}
+
+/* Opcional: estiliza tu footer para que ocupe todo el ancho */
+footer {
+  width: 100%;
+  background: #222;
+  color: #fff;
+  padding: 12px;
+  text-align: center;
+}
+.reservas-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.reservas-table th,
+.reservas-table td {
+  padding: 12px 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.reservas-table thead th {
+  background-color: #f0f0f0;
+  color: #555;
+  font-weight: 600;
+}
+
+.reservas-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.reservas-table tbody tr:hover {
+  background-color: #f1faff;
+}
+
+.btn-cancel {
+  background-color: #e53935;
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.btn-cancel:hover {
+  background-color: #ab000d;
+}

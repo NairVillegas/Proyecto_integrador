@@ -119,25 +119,41 @@ const Menu = () => {
     });
   }
 
-  // 2️⃣ Crear sesión de Stripe con clienteId incluido
+  // 2️⃣ Preparamos el array items para el backend
+  const itemsPayload = cartItems.map(item => ({
+    productoId: item.id,
+    cantidad: item.quantity
+  }));
+
+  console.log("🚀 Enviando al backend:", {
+    clienteId: usuario.id,
+    amount: Math.round(total * 100),
+    description: `Pago carrito — S/ ${total}`,
+    successUrl: window.location.origin + "/success",
+    cancelUrl:  window.location.origin + "/cancel",
+    items: itemsPayload
+  });
+
+  // 3️⃣ Crear sesión de Stripe con clienteId e items incluidos
   try {
     const res = await fetch("http://localhost:8080/api/pagos/create-session", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        clienteId: usuario.id,                        // ← Añadido aquí
+        clienteId: usuario.id,
         amount: Math.round(total * 100),
         description: `Pago carrito — S/ ${total}`,
         successUrl: window.location.origin + "/success",
-        cancelUrl:  window.location.origin + "/cancel"
+        cancelUrl:  window.location.origin + "/cancel",
+        items: itemsPayload        // <-- aquí van los items
       })
     });
     if (!res.ok) throw new Error("No se pudo iniciar el pago");
 
-    // 3️⃣ Recibimos sessionId, publishableKey y pedidoId
+    // 4️⃣ Recibimos sessionId, publishableKey y pedidoId
     const { sessionId, publishableKey, pedidoId } = await res.json();
 
-    // 4️⃣ Redirigimos a Stripe Checkout
+    // 5️⃣ Redirigimos a Stripe Checkout
     const stripe = await getStripe(publishableKey);
     const { error } = await stripe.redirectToCheckout({ sessionId });
     if (error) throw error;
@@ -147,6 +163,7 @@ const Menu = () => {
     Swal.fire("Error", err.message, "error");
   }
 };
+
 
   const groupedProducts = products.reduce((acc, product) => {
     const category = product.categoria?.nombre || 'Otros';

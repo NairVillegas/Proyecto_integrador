@@ -1,157 +1,155 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import Swal from 'sweetalert2';
+// src/components/ReservaCrud.js
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
+import Swal from 'sweetalert2'
 
 const ReservaCrud = () => {
-  const [reservas, setReservas] = useState([]);
-  const [clientes, setClientes] = useState({}); // Almacenar los datos del cliente por id
+  const [reservas, setReservas] = useState([])
+  const [cargando, setCargando] = useState(true)
 
-  // Fetch de las reservas
+  // 1) Cargar reservas al montar
   useEffect(() => {
     const fetchReservas = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/reservas');
-        setReservas(response.data);
+        const { data } = await axios.get('http://localhost:8080/api/reservas')
+        setReservas(data)
       } catch (error) {
-        console.error('Error al obtener las reservas:', error);
-        Swal.fire({
-          title: 'Error',
-          text: 'No se pudieron cargar las reservas.',
-          icon: 'error',
-          confirmButtonText: 'Aceptar',
-        });
+        console.error('Error al obtener las reservas:', error)
+        Swal.fire('Error', 'No se pudieron cargar las reservas.', 'error')
+      } finally {
+        setCargando(false)
       }
-    };
+    }
+    fetchReservas()
+  }, [])
 
-    fetchReservas();
-  }, []);
-
-  // Fetch de los datos de los clientes
-  useEffect(() => {
-    const fetchClientes = async () => {
-      let clienteData = {};
-
-      if (reservas.length > 0) {
-        for (let reserva of reservas) {
-          const clienteId = reserva.clienteId;
-
-          if (clienteId) {
-            try {
-              const response = await axios.get(`http://localhost:8080/api/clientes/${clienteId}`);
-              clienteData[clienteId] = response.data;
-            } catch (error) {
-              console.error(`Error al obtener el cliente con id ${clienteId}:`, error);
-            }
-          }
-        }
-
-        setClientes(clienteData); // Actualizamos el estado con los datos de los clientes
-      }
-    };
-
-    fetchClientes();
-  }, [reservas]);
-
-  // Función para eliminar una reserva
-  const handleDelete = async (id) => {
-    const confirmDelete = await Swal.fire({
-      title: '¿Estás seguro?',
-      text: `¿Deseas eliminar esta reserva?`,
+  // 2) Cancelar reserva (marcar como "Cancelado")
+  const handleCancel = async (id) => {
+    const { isConfirmed } = await Swal.fire({
+      title: '¿Seguro que quieres cancelar?',
+      text: 'La reserva pasará a estado "Cancelado".',
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#3085d6',
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
-    });
+      confirmButtonText: 'Sí, cancelar',
+      cancelButtonText: 'No, mantener',
+    })
 
-    if (confirmDelete.isConfirmed) {
-      try {
-        // Eliminar la reserva desde el backend
-        await axios.delete(`http://localhost:8080/api/reservas/${id}`);
-        
-        // Actualizar el estado de las reservas para reflejar los cambios sin necesidad de recargar la página
-        setReservas(reservas.filter((reserva) => reserva.id !== id));
+    if (!isConfirmed) return
 
-        Swal.fire('Eliminado', 'La reserva ha sido eliminada correctamente.', 'success');
-      } catch (error) {
-        Swal.fire('Error', 'No se pudo eliminar la reserva.', 'error');
-      }
+    try {
+      const { data: reservaActualizada } = await axios.put(
+        `http://localhost:8080/api/reservas/${id}/cancelar`
+      )
+      setReservas((prev) =>
+        prev.map((r) => (r.id === id ? reservaActualizada : r))
+      )
+      Swal.fire('Hecho', 'Reserva cancelada correctamente.', 'success')
+    } catch (err) {
+      console.error('Error al cancelar la reserva:', err)
+      Swal.fire('Error', 'No se pudo cancelar la reserva.', 'error')
     }
-  };
+  }
+
+  // 3) Parsear fecha que puede venir como ISO‐string o como array [yyyy,mm,dd,h,min]
+  const parseFecha = (f) => {
+    if (Array.isArray(f)) {
+      const [y, m, d, h, min] = f
+      return new Date(y, m - 1, d, h, min)
+    }
+    return new Date(f)
+  }
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      <h2 style={{ textAlign: 'center', marginBottom: '20px' }}>Lista de Reservas</h2>
+    <div style={{ padding: 20, fontFamily: 'Arial, sans-serif' }}>
+      <h2 style={{ textAlign: 'center', marginBottom: 20 }}>Lista de Reservas</h2>
 
-      <table
-        style={{
-          width: '100%',
-          borderCollapse: 'collapse',
-          marginTop: '20px',
-        }}
-      >
+      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
         <thead>
-          <tr style={{ backgroundColor: '#f4f4f4' }}>
-            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Nombre Cliente</th>
-            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Apellido Cliente</th>
-            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Teléfono Cliente</th>
-            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Correo Cliente</th>
-            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Número de Mesa</th>
-            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Observaciones</th>
-            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Fecha de Reserva</th>
-            <th style={{ padding: '10px', border: '1px solid #ddd' }}>Acciones</th> {/* Nueva columna para eliminar */}
+          <tr style={{ background: '#f4f4f4' }}>
+            {[
+              'Nombre',
+              'Apellido',
+              'Teléfono',
+              'Correo',
+              'Mesa',
+              'Personas',
+              'Observaciones',
+              'Inicio',
+              'Fin',
+              'Estado',
+              'Acciones',
+            ].map((h) => (
+              <th key={h} style={{ padding: 10, border: '1px solid #ddd' }}>
+                {h}
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {reservas.map((reserva) => {
-            const cliente = clientes[reserva.clienteId]; // Obtener los datos del cliente usando clienteId
-
-            return (
+          {cargando ? (
+            <tr>
+              <td colSpan={11} style={{ textAlign: 'center', padding: 20 }}>
+                Cargando…
+              </td>
+            </tr>
+          ) : reservas.length === 0 ? (
+            <tr>
+              <td colSpan={11} style={{ textAlign: 'center', padding: 20 }}>
+                No hay reservas
+              </td>
+            </tr>
+          ) : (
+            reservas.map((reserva) => (
               <tr key={reserva.id}>
-                <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                  {cliente ? cliente.nombre : 'Cargando...'}
+                <td style={td}>{reserva.cliente?.nombre || '-'}</td>
+                <td style={td}>{reserva.cliente?.apellido || '-'}</td>
+                <td style={td}>{reserva.cliente?.telefono || '-'}</td>
+                <td style={td}>{reserva.cliente?.email || '-'}</td>
+                <td style={td}>{reserva.mesa.numero}</td>
+                <td style={td}>{reserva.numPersonas}</td>
+                <td style={td}>{reserva.observaciones || '—'}</td>
+                <td style={td}>
+                  {parseFecha(reserva.fechaInicio).toLocaleString('es-PE', {
+                    dateStyle: 'short',
+                    timeStyle: 'short',
+                  })}
                 </td>
-                <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                  {cliente ? cliente.apellido : 'Cargando...'}
+                <td style={td}>
+                  {parseFecha(reserva.fechaFin).toLocaleString('es-PE', {
+                    dateStyle: 'short',
+                    timeStyle: 'short',
+                  })}
                 </td>
-                <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                  {cliente ? cliente.telefono : 'Cargando...'}
-                </td>
-                <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                  {cliente ? cliente.email : 'Cargando...'}
-                </td>
-                <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                  {reserva.mesa ? reserva.mesa.numero : 'No disponible'}
-                </td>
-                <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                  {reserva.observaciones || 'No hay comentarios'}
-                </td>
-                <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                  {new Date(reserva.fecha).toLocaleString('en-US', { timeZone: 'UTC' })}
-                </td>
-                <td style={{ padding: '10px', border: '1px solid #ddd' }}>
-                  {/* Botón para eliminar la reserva */}
-                  <button
-                    onClick={() => handleDelete(reserva.id)}
-                    style={{
-                      backgroundColor: '#d33',
-                      color: 'white',
-                      border: 'none',
-                      padding: '5px 10px',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    Eliminar
-                  </button>
+                <td style={td}>{reserva.estado}</td>
+                <td style={td}>
+                  {reserva.estado !== 'Cancelado' && (
+                    <button
+                      onClick={() => handleCancel(reserva.id)}
+                      style={{
+                        background: '#d33',
+                        color: '#fff',
+                        border: 'none',
+                        padding: '6px 12px',
+                        cursor: 'pointer',
+                        borderRadius: 4,
+                      }}
+                    >
+                      Cancelar
+                    </button>
+                  )}
                 </td>
               </tr>
-            );
-          })}
+            ))
+          )}
         </tbody>
       </table>
     </div>
-  );
-};
+  )
+}
 
-export default ReservaCrud;
+// estilo de celdas
+const td = { padding: 10, border: '1px solid #ddd' }
+
+export default ReservaCrud
