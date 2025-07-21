@@ -1,3 +1,0 @@
-mvn spring-boot:run
-integratedSecurity=true;encrypt=false;
-mvn clean install
